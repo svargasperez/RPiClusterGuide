@@ -4,7 +4,7 @@
 >
 > The guide presents the list of components needed to create a low-cost Bewolf-type cluster, helpful pictures, instructions for assembling hardware, software installation, commands to execute proper configuration, and more.
 >
-> For questions, please contact Dr. Vargas-Pérez via [E-mail](mailto:sandino.vargasperez@kzoo.edu).
+> For questions, please contact Dr. Vargas-Pérez via [e-mail](mailto:sandino.vargasperez@kzoo.edu).
 
 ## About the Guide
 
@@ -19,7 +19,7 @@ The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, 
 - 1 Ethernet switch (with 5 ports or more)
 - 1 USB power adapter (with 5 ports or more, 2.4 amps per port)
 - 1 Stackable acrylic case for RPis
-	- Make sure this item includes 4 Layers and heatsinks, and it is compatible with the RPi model chosen
+	- Make sure this item includes 4 layers, heatsinks, and it is compatible with the RPi model chosen <a href="https://www.amazon.com/dp/B07BGYGLZG/?coliid=I3A352BNN34AM2&colid=GT5EJQ2GW4AP&psc=1" target="_blank">&#10697;</a>. 
 - Recommended tools:
 	- Tweezers (Optional)
 	- Screw driver
