@@ -42,5 +42,5 @@ The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, 
 1. Stack:
 	1. Put the screw end of the nub through the plate into the open end of the leg to keep it in place. Repeat for all four of the first layers: **nub &rarr; plate &rarr; leg**
 	1. Place the next plate on top of the screw end of the leg: **leg &rarr; plate &rarr; leg**
-	1. Place the final plate on legs then and secure it with the silver nut on top. **leg &rarr; plate w/o Pi &rarr; silver nut**
+	1. Place the final plate on legs then and secure it with the silver nut on top: **leg &rarr; plate w/o Pi &rarr; silver nut**
 
