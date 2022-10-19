@@ -39,7 +39,7 @@ The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, 
 	1. Place RPi through the screws such that the heat sink on the bottom fits through the square cutout: **screw &rarr;  plate &rarr;  spacer &rarr; Pi**. 
 	1. Place and tighten nuts on the screws on top of the RPi, making sure to tighten them: **screw &rarr; plate &rarr; spacer &rarr; RPi &rarr; nut**. 
 
-1. Stack:
+1. Stack RPis to form a tower:
 	1. Put the screw end of the nub through the plate into the open end of the leg to keep it in place. Repeat for all four of the first layers: **nub &rarr; plate &rarr; leg**
 	1. Place the next plate on top of the screw end of the leg: **leg &rarr; plate &rarr; leg**
 	1. Place the final plate on legs then and secure it with the silver nut on top: **leg &rarr; plate w/o Pi &rarr; silver nut**
