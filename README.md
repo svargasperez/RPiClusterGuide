@@ -53,9 +53,20 @@ The next sections will walk through setting up the microSD cards for the cluster
 
 ### Software Download Requirements:
 - Latest version of **Raspberry Pi OS with desktop** for head node and **Raspberry Pi OS Lite** for worker node <a href="https://www.amazon.com/dp/B07BGYGLZG/?coliid=I3A352BNN34AM2&colid=GT5EJQ2GW4AP&psc=1" target="_blank">&#10697;</a>.
-- **Etcher** to install (flash) Raspberry Pi OS images to microSD card <a href="https://www.balena.io/etcher/" target="_blank">&#10697;</a>.
+- **Etcher** to install (flash) Raspberry Pi OS images into the microSD card <a href="https://www.balena.io/etcher/" target="_blank">&#10697;</a>.
 - **VNC Viewer** to connect to the head node using an external computer (optional) <a href="https://www.realvnc.com/en/connect/download/viewer/" target="_blank">&#10697;</a>.
 
+
+## Setting Up MicroSD Cards 
+
+1. Formatting MicroSD Card:
+	1. Plug microSD card into a computer. *Use a USB to microSD adapter if the computer doesn't have microSD or SD card slots*.
+	1. On macOS: open **Disk Utility** and navigate to the microSD card. Select **Erase** in the top center of the window. In the "Format" dropdown menu, select "MS-DOT (FAT)". Click **Erase** (the name of the device does not matter).
+	1. On Windows: use **Windows Explorer** to locate the microSD card, right-click on it, and select **Format**. Select **Quick Format** and click start.
+1. Open Etcher to flash the microSD card:
+	1. Click **Select image** and navigate to where the Raspberry Pi OS was downloaded. The files should end in ``.img``. Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
+	1. Click **Select target** and chose the microSD card.
+	1. Click **Flash!** <br><img src="img/fig3.png" alt="fig 3">
 
 
 
