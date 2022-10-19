@@ -6,13 +6,16 @@
 >
 > For questions, please contact Dr. Vargas-Pérez via [e-mail](mailto:sandino.vargasperez@kzoo.edu).
 
-## About the Guide
-
 The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, but it can be used to build a cluster of any size. The step-by-step instructions will detail how to assemble hardware, configure software, and the setup needed to have a fully functioning RPi cluster. Raspberry Pi 3 B+s were used for this project, although with a few tweaks, any modern RPi should work.
 
-### Materials
+# Hardware Setup and Assembly
 
-- 4 Raspberry Pi computers
+Below are instructions to assemble a 4 RPi cluster. One RPi will be used as a head node, and the rest will be worker nodes. The following diagram shows the layout for the cluster and its components: <br><br><img src="img/cluster.png" alt="cluster diagram">
+
+### Materials Required:
+*The materials needed might change depending on their availability.*
+
+- 4 Raspberry Pi (RPi) computers
 - 4 MicroSD cards (32 or 64 GB w/adapter)
 - 5 Ethernet cable (cat 5e or 6, 1 foot in length or more)
 - 4 Micro USB Cords
@@ -25,7 +28,7 @@ The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, 
 	- Screw driver
 	- Monitor (or Ethernet to USB adapter to connect via VNC)
 
-## Section 1: Hardware Assembly
+## Hardware Assembly
 
 1. Installing Heat Sink: The stackable acrylic case included heat sinks. Install three heat sinks per RPi; two larger ones and a smaller one. The two larger heat sinks go on the Broadcom CPU and the RAM chip, the smaller one goes on the Ethernet and USB controller. Install heat sinks by removing the filament on the bottom and pushing firmly until they are attached securely. For all RPis: 
 	1. Install a large heat sink on Broadcom CPU and a small heat sink on the Ethernet and USB controller, both located on top of the RPi:<br><img src="img/fig1.jpeg" alt="fig 1" width="50%" height="50%">
@@ -43,4 +46,19 @@ The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, 
 	1. Put the screw end of the nub through the plate into the open end of the leg to keep it in place. Repeat for all four of the first layers: **nub &rarr; plate &rarr; leg**
 	1. Place the next plate on top of the screw end of the leg: **leg &rarr; plate &rarr; leg**
 	1. Place the final plate on legs then and secure it with the silver nut on top: **leg &rarr; plate w/o Pi &rarr; silver nut**
+
+# Software Installation and Setup
+
+The next sections will walk through setting up the microSD cards for the cluster. These examples were using macOS, but all the software needed can be downloaded for Windows OS.
+
+### Software Download Requirements:
+- Latest version of **Raspberry Pi OS with desktop** for head node and **Raspberry Pi OS Lite** for worker node <a href="https://www.amazon.com/dp/B07BGYGLZG/?coliid=I3A352BNN34AM2&colid=GT5EJQ2GW4AP&psc=1" target="_blank">&#10697;</a>.
+- **Etcher** to install (flash) Raspberry Pi OS images to microSD card <a href="https://www.balena.io/etcher/" target="_blank">&#10697;</a>.
+- **VNC Viewer** to connect to the head node using an external computer (optional) <a href="https://www.realvnc.com/en/connect/download/viewer/" target="_blank">&#10697;</a>.
+
+
+
+
+
+
 
