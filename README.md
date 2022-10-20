@@ -64,12 +64,43 @@ The next sections will walk through setting up the microSD cards for the cluster
 	1. On macOS: open **Disk Utility** and navigate to the microSD card. Select **Erase** in the top center of the window. In the "Format" dropdown menu, select "MS-DOT (FAT)". Click **Erase** (the name of the device does not matter).
 	1. On Windows: use **Windows Explorer** to locate the microSD card, right-click on it, and select **Format**. Select **Quick Format** and click start.
 1. Open Etcher to flash the microSD card:
-	1. Click **Select image** and navigate to where the Raspberry Pi OS was downloaded. The files should end in ``.img``. Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
+	1. Click **Select image** and navigate to where the Raspberry Pi OS was downloaded. The files should end in `.img.` Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
 	1. Click **Select target** and chose the microSD card.
 	1. Click **Flash!** <br><img src="img/fig3.png" alt="fig 3">
+1. Remove and re-insert the flashed microSD card into the computer. *Must of the time Etcher will automatically eject SD cards when finished*
+1. Using a text editor such as **Sublime Text**, create an empty file named `ssh` (without an extension) and save it on the microSD card. Do this for all 4 microSD cards. Alternatively, navigate to the microSD card via terminal, and use the command `touch ssh` to create the empty file.
 
+## Configuring RPis
 
+Next are instructions to logging into the RPis and edit some configuration files to make them work as a cluster. Accessing the RPis can be done with or without an external monitor. Follow **1. Access RPi with external monitor** if use an external monitor, or **Access RPi without external monitor** otherwise.
 
+1. **Access RPi with external monitor**:
+	1. Insert the microSD card into the RPi. 
+	1. Connect RPi to Internet using an Ethernet cable (if the RPi comes with WiFi, this is optional).
+	1. Connect external monitor through HDMI.
+	1. Connect the RPi to the USB power adapter using one of the micro USB cables, and then turn the RPi on. A boot up screen should show up in the external monitor.
+	1. Once booted up, some versions of **Raspberry Pi OS** will have a prompt to change password, set time zone, and update the OS. Follow these instructions, or do it manually later.
 
+    If the RPi has started but the external monitor is not getting a signal, unplug RPi and remove its microSD card. Insert the card into a computer and navigate to its contents. Locate and open the file `config.txt`. If the following lines are commented out, uncomment them by removing the `#` in front of them (if they don't exist, add them): 
+    ```
+    hdmi_force_hotplug=1
+    hdmi_drive=2
+    ```
+    Re-insert the microSD in the RPi and turn it on. If the previous modifications didn't fix the problem, check that the monitor is connected properly to the correct input, and the HDMI cable is functional.
 
+1. **Access RPi without external monitor**: This step will require an Ethernet to USB adapter to connect the RPi via Ethernet cable to a computer using **VNC viewer**. If the computer has an Ethernet port, the adapter is not needed.
 
+<!--  Below explains how to log in to the Raspberry Pi using a process called ssh. If you are using a headless Pi, meaning it is running Raspbian Lite, skip steps 8-11. 
+VNC viewer  https://www.realvnc.com/en/connect/download/viewer/macos/
+1.)	Insert your microSD card into your Pi. 
+2.)	Plug an Ethernet cord into the Pi and your computer. (Macs may need an adapter)
+3.)	Also, plug your micro USB into your computer and Pi. 
+4.)	Make sure Internet sharing is turned on. (You can do this by going to “System Preferences” -> “Sharing”. And make sure “Internet Sharing” is checked and you are sharing your WiFi connection to the LAN connection. 
+5.)	Open terminal and run the command “ping raspberrypi.local”
+6.)	Copy the IP address that is connected to the Pi. (press control z to stop it “^z”).
+7.)	Then use the command “ssh pi@~your Pi’s IP~”. For example mine was ssh pi@192.168.2.8
+8.)	Type “Yes” and hit enter
+9.)	Enter the Pis username and password. (By default the username is “pi” and the password is “raspberry”) ***If working on a headless Pi proceed to section 2.3 now***
+10.)	Now we will start the VNC virtual desktop by typing “vncserver”
+11.)	Copy the IP of your Raspberry Pi.
+ -->
