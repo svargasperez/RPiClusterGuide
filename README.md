@@ -105,7 +105,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Open the **VNC Viewer** application installed in the computer and paste the IP in the top search bar. It should prompt you for the RPi **username** and **password**. Remember by default it should be username: `pi`, password: `raspberry`.
 
 1. **Configuring Hostnames**: Choose a host name for your RPis carefully. Later, a scheduler called Slurm will be used to manage workload and running code in the cluster. Slurm requires nodes to be named a certain way, such as `node001` for the head node, and `node002`, `node003`, and `node004` for the worker node. 
-	1. Open a **Terminal** in the RPi and type the following commands to change the hostname:
+	1. Open a **Terminal** in the RPi and type the following commands to change the host name:
 		- `sudo hostname headnode001`, where `headnode001` is the host name you chose for the RPi.
 		- `sudo nano /etc/hostname`, this will open the file `/etc/hostname` using the text editor **nano**. Delete everything, and enter the same host name, i.e., `headnode001` or the host name chosen for the RPi. To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS). <br><img src="img/fig8.png" alt="fig 8">
 		- `sudo nano /etc/hosts`,  and replace `raspberrypi` with your chosen host name (e.g., `headnode001` ). To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS).<br><img src="img/fig8b.png" alt="fig 8b">
@@ -121,6 +121,68 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. To activate all these changes, type `sudo reboot`. To shut down this node, the command `sudo shutdown -h now` can be used.
 	1. Repeat the steps from sections **2.** to **4.** for all of your RPis, making sure to choose appropriate host names.
 
+
 ## Software Installation
 
+1. Update existing packages by running the following commands. It should be perform in all the RPis, so connect to the nodes (either from the head node, or individually using a computer and **VNC Viewer**: 
+	```
+	sudo apt-get update
+	sudo apt-get upgrade -y
+	sudo reboot
+	```
+1. Install **MPICH**, a free, open-source implementation of the message passing interface (MPI), is one of the main components needed to for a high-performance computing (HPC) cluster because it is used for parallel programing. **MPICH** needs three directories to be created: `mpi-dl` to open the source code, `mpi` to be the installation path (“mpi”), and `mpi-build` used to build the code, as well as some other dependencies like **Gfortran**:
+	```
+	sudo apt install gfortran -y
+	sudo apt install ntpdate -y
+	sudo mkdir /opt/mpi-dl
+	sudo mkdir /opt/mpi
+	sudo mkdir /opt/mpi-build
+	```
+1. Move to the `mpi-dl` directory with the command `cd /opt/mpi-dl`
+1. Download `mpich`. The next few steps might take a while:<br>
+`sudo wget http://www.mpich.org/static/downloads/3.3/mpich-3.3.tar.gz`
+1. Extract the downloaded file: `sudo tar zxvf mpich-3.3.tar.gz`
+1. Navigate to the `mpi-build` directory: `cd /opt/mpi-build`
+1. Prepare the configuration file: `sudo /opt/mpi-dl/mpich-3.3/configure --prefix=/opt/mpi`
+1. Run the configuration build using: `sudo make`
+1. Finish with the actual installation: `sudo make install`
+ 
+1. Install **MPI4PY**, which will make **Python** available to communicate with the cluster.
+1. Move back to the `opt` directory with the command `cd /opt/`
+1. Download the needed dependencies using: 
+`sudo apt install python-pip python-dev libopenmpi-dev -y`
+1. Start installing **MPI4PY** with: `sudo pip install mpi4py` 
+ 
+## Cluster Configurations
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
+
+<!-- Section 4: Auto Login
+        	This section will allow our head node to log into our worker nodes without a password. 
+1.)	On the head node move to the Pi directory “cd /home/pi/”.
+2.)	 Run “ssh-keygen -t rsa” on your head node.
+1.	Make sure you to hit enter three times, accepting the default path and making no password.
+3.)	“scp /home/pi/.ssh/id_rsa.pub pi@~worker nodes IP~:/home/pi/master.pub”    (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
+4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
+5.)	Run “ssh-keygen -t rsa” on worker node. Make sure you hit enter three times. Accepting the default path and creating no password
+6.)	“cat master.pub >> .ssh/authorized_keys” on worker node
+7.)	“exit” on worker node
+8.)	Repeat steps 3-7 for all of your nodes.
+9.)	To test if it worked, ssh into one of your worker nodes. You should not have to enter a password.
+
+Section 5: Setting Static IPs
+	Every Pi needs a static IP to allow the cluster to communicate with each other regardless what networks it connects to. The cluster only works if they are on the same network, meaning they are all plugged into the same network switcher or router. I would recommend making the IPs correlate to the hostname of the node.
+5.1: Setting Static IP
+1.)	To set a static IP edit the dhcpcd.conf file. “sudo nano /etc/dhcpcd.conf”
+2.)	And add these line at the bottom (you can look at the picture for a reference)
+“interface eth0
+static ip_address=~your chosen IP~
+static routers=~your chosen router IP~ (this will be the IP of the switch)
+static domain_name_servers=
+static domain_search= 
+noipv6”
+3.)	For the non-head nodes only add
+“interface eth0
+static ip_address=~your chosen IP~
+static routers=~the same router IP as before~”
+4.)	“sudo reboot”
+5.)	Repeat steps 1-5 for all of your nodes -->
