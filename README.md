@@ -123,4 +123,4 @@ Next are instructions to logging into the RPis and edit some configuration files
 
 ## Software Installation
 
-> THIS SECTION IS UNDE CONSTRUCTION :construction_worker:
+> THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
