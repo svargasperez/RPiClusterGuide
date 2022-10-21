@@ -156,11 +156,10 @@ Next are instructions to logging into the RPis and edit some configuration files
 ## Cluster Configurations
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
 
-<!-- Section 4: Auto Login
-        	This section will allow our head node to log into our worker nodes without a password. 
-1.)	On the head node move to the Pi directory “cd /home/pi/”.
-2.)	 Run “ssh-keygen -t rsa” on your head node.
-1.	Make sure you to hit enter three times, accepting the default path and making no password.
+<!-- 1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes.
+	1. On the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
+	1. Run `ssh-keygen -t rsa`.
+	1. Make sure you to hit enter three times, accepting the default path and making no password.
 3.)	“scp /home/pi/.ssh/id_rsa.pub pi@~worker nodes IP~:/home/pi/master.pub”    (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
 4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
 5.)	Run “ssh-keygen -t rsa” on worker node. Make sure you hit enter three times. Accepting the default path and creating no password
@@ -185,4 +184,4 @@ noipv6”
 static ip_address=~your chosen IP~
 static routers=~the same router IP as before~”
 4.)	“sudo reboot”
-5.)	Repeat steps 1-5 for all of your nodes -->
+5.)	Repeat steps 1-5 for all of your nodes  -->
