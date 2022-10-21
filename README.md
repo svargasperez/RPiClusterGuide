@@ -10,7 +10,7 @@ The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, 
 
 # Hardware Setup and Assembly
 
-Below are instructions to assemble a 4 RPi cluster. One RPi will be used as a head node, and the rest will be worker nodes. The following diagram shows the layout for the cluster and its components: <br><br><img src="img/cluster.png" alt="cluster diagram">
+Below are instructions to assemble a 4 RPi cluster. One RPi will be used as a head node, and the rest will be designated as worker nodes. The following diagram shows the layout for the cluster and its components: <br><br><img src="img/cluster.png" alt="cluster diagram">
 
 ### Materials Required:
 *The materials needed might change depending on their availability.*
@@ -72,7 +72,7 @@ The next sections will walk through setting up the microSD cards for the cluster
 
 ## Configuring RPis
 
-Next are instructions to logging into the RPis and edit some configuration files to make them work as a cluster. Accessing the RPis can be done with or without an external monitor. Follow **1. Access RPi with external monitor** if use an external monitor, or **Access RPi without external monitor** otherwise.
+Next are instructions to logging into the RPis and edit some configuration files to make them work as a cluster. Accessing the RPis can be done with or without an external monitor. Follow **1. Access RPi with external monitor** if using an external monitor, or **2. Access RPi without external monitor** otherwise (most common way).
 
 1. **Access RPi with external monitor**:
 	1. Insert the microSD card into the RPi. 
@@ -88,19 +88,39 @@ Next are instructions to logging into the RPis and edit some configuration files
     ```
     Re-insert the microSD in the RPi and turn it on. If the previous modifications didn't fix the problem, check that the monitor is connected properly to the correct input, and the HDMI cable is functional.
 
-1. **Access RPi without external monitor**: This step will require an Ethernet to USB adapter to connect the RPi via Ethernet cable to a computer using **VNC viewer**. If the computer has an Ethernet port, the adapter is not needed.
+1. **Access RPi without external monitor** (most common way): This step will require an Ethernet to USB adapter to connect the RPi via Ethernet cable to a computer using **VNC viewer**. If the computer has an Ethernet port, the adapter is not needed.
+	1. Start with the RPi designated as head node, and then repeat these steps with the rest of the RPis . Insert the microSD card into the RPi (this is the card with **Raspberry Pi OS with desktop** in it). 
+	1. Connect the RPi to a computer using an Ethernet cable. Use an Ethernet to USB adapter if the computer doesn't have an Ethernet port. You might also power up the RPi by connecting the micro USB power cable to one of the computer's USB ports, or into the USB power adapter.<br><img src="img/fig5.png" alt="fig 5">
+	1. Be sure to turn on "Internet Sharing". 
+		- On macOS: Select **System Preferences &rarr; Sharing**, and make sure "Internet Sharing" is checked and the WiFi connection is being shared with the LAN connection.
+		- On Windows: *Needs instructions* 
+	1. Open the **Terminal** and run the command `ping raspberrypi.local`
+	1. Copy the IP address that is associated to the RPi. Press <kbd>Ctrl</kbd> + <kbd>z</kbd>  (<kbd>^</kbd> + <kbd>z</kbd> on macOS).<br><img src="img/fig6.png" alt="fig 6">
+	1. Then type the command `ssh pi@192.168.2.8`, where `192.168.2.8` is the IP address you copied in the previous step.
+	1. Type `Yes` and press <kbd>enter</kbd> (<kbd>return</kbd> in macOS).
+	1. Enter the RPi **username** and **password**. By default the username is `pi` and the password is `raspberry`. 
+		- *If working with an RPi designated as a worker node, skip next steps and proceed to:* **3. Configuring Hostnames**
+	1. Head node only: Start the VNC virtual desktop in the RPi by opening a terminal and typing `vncserver`
+	1. Copy the IP of the RPi: <br><img src="img/fig7.png" alt="fig 7">
+	1. Open the **VNC Viewer** application installed in the computer and paste the IP in the top search bar. It should prompt you for the RPi **username** and **password**. Remember by default it should be username: `pi`, password: `raspberry`.
 
-<!--  Below explains how to log in to the Raspberry Pi using a process called ssh. If you are using a headless Pi, meaning it is running Raspbian Lite, skip steps 8-11. 
-VNC viewer  https://www.realvnc.com/en/connect/download/viewer/macos/
-1.)	Insert your microSD card into your Pi. 
-2.)	Plug an Ethernet cord into the Pi and your computer. (Macs may need an adapter)
-3.)	Also, plug your micro USB into your computer and Pi. 
-4.)	Make sure Internet sharing is turned on. (You can do this by going to “System Preferences” -> “Sharing”. And make sure “Internet Sharing” is checked and you are sharing your WiFi connection to the LAN connection. 
-5.)	Open terminal and run the command “ping raspberrypi.local”
-6.)	Copy the IP address that is connected to the Pi. (press control z to stop it “^z”).
-7.)	Then use the command “ssh pi@~your Pi’s IP~”. For example mine was ssh pi@192.168.2.8
-8.)	Type “Yes” and hit enter
-9.)	Enter the Pis username and password. (By default the username is “pi” and the password is “raspberry”) ***If working on a headless Pi proceed to section 2.3 now***
-10.)	Now we will start the VNC virtual desktop by typing “vncserver”
-11.)	Copy the IP of your Raspberry Pi.
- -->
+1. **Configuring Hostnames**: Choose a host name for your RPis carefully. Later, a scheduler called Slurm will be used to manage workload and running code in the cluster. Slurm requires nodes to be named a certain way, such as `node001` for the head node, and `node002`, `node003`, and `node004` for the worker node. 
+	1. Open a **Terminal** in the RPi and type the following commands to change the hostname:
+		- `sudo hostname headnode001`, where `headnode001` is the host name you chose for the RPi.
+		- `sudo nano /etc/hostname`, this will open the file `/etc/hostname` using the text editor **nano**. Delete everything, and enter the same host name, i.e., `headnode001` or the host name chosen for the RPi. To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS). <br><img src="img/fig8.png" alt="fig 8">
+		- `sudo nano /etc/hosts`,  and replace `raspberrypi` with your chosen host name (e.g., `headnode001` ). To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS).<br><img src="img/fig8b.png" alt="fig 8b">
+
+1. **RPi's OS Configuration**:
+	1. On a **Terminal** in the RPi type the command `sudo raspi-config` to bring up the software configuration tool. <br><img src="img/fig9.png" alt="fig 9">	
+	1. Select "Change User Password" and follow the instructions. *It is recommended (for the purpose of this guide) to make all passwords the same for each RPi*.
+	1. Next, open "Localisation Options" &rarr; "Change Locale". Scroll down until the `en_US.UTF-8 UTF-8` option is highlighted and press <kbd>enter</kbd>, then <kbd>enter</kbd> again.
+		- If it cannot be set by default, exit the menu and type `sudo nano /etc/locale.gen`, uncomment the line containing `en_US.UTF-8 UTF-8` (if it is commented out). Then, in the **Terminal** type `locale-gen` and try again. If that still does not work, try `sudo dpkg-reconfigure locales` and select the correct locale.
+	1. Once back to the software configuration tool window, select "Localisation Options" and change the timezone.
+	1. Next, choose "Advanced Options" &rarr; "Expand Filesystem" and press <kbd>enter</kbd>.
+	1. Finally, select the option "Update".
+	1. To activate all these changes, type `sudo reboot`. To shut down this node, the command `sudo shutdown -h now` can be used.
+	1. Repeat the steps from sections **2.** to **4.** for all of your RPis, making sure to choose appropriate host names.
+
+## Software Installation
+
+> THIS SECTION IS UNDE CONSTRUCTION :construction_worker:
