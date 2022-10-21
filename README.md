@@ -64,7 +64,7 @@ The next sections will walk through setting up the microSD cards for the cluster
 	1. On macOS: open **Disk Utility** and navigate to the microSD card. Select **Erase** in the top center of the window. In the "Format" dropdown menu, select "MS-DOT (FAT)". Click **Erase** (the name of the device does not matter).
 	1. On Windows: use **Windows Explorer** to locate the microSD card, right-click on it, and select **Format**. Select **Quick Format** and click start.
 1. Open Etcher to flash the microSD card:
-	1. Click **Select image** and navigate to where the Raspberry Pi OS was downloaded. The files should end in `.img.` Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
+	1. Click **Select image** and navigate to where the Raspberry Pi OS was downloaded. The files should end in `.img`. Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
 	1. Click **Select target** and chose the microSD card.
 	1. Click **Flash!** <br><img src="img/fig3.png" alt="fig 3">
 1. Remove and re-insert the flashed microSD card into the computer. *Must of the time Etcher will automatically eject SD cards when finished*
