@@ -1,5 +1,5 @@
 # How to Build a Low-Cost HPC Cluster
-
+###### Last modified 
 > This guide is the result of an independent study performed by [Nathan H. Silverman](https://www.linkedin.com/in/nathan-silverman-b35767173/), a  [Kalamazoo College](https://www.kzoo.edu)'s student in Computer Science, under the supervision of Sandino Vargas-Pérez. 
 >
 > The guide presents the list of components needed to create a low-cost Bewolf-type cluster, helpful pictures, instructions for assembling hardware, software installation, commands to execute proper configuration, and more.
@@ -154,12 +154,10 @@ Next are instructions to logging into the RPis and edit some configuration files
 1. Start installing **MPI4PY** with: `sudo pip install mpi4py` 
  
 ## Cluster Configurations
-> THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
 
 <!-- 1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes.
 	1. On the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
-	1. Run `ssh-keygen -t rsa`.
-	1. Make sure you to hit enter three times, accepting the default path and making no password.
+	1. Run `ssh-keygen -t rsa`. Make sure to press <kbd>enter</kbd> three times, accepting the default path and creating no password.
 3.)	“scp /home/pi/.ssh/id_rsa.pub pi@~worker nodes IP~:/home/pi/master.pub”    (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
 4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
 5.)	Run “ssh-keygen -t rsa” on worker node. Make sure you hit enter three times. Accepting the default path and creating no password
@@ -168,8 +166,12 @@ Next are instructions to logging into the RPis and edit some configuration files
 8.)	Repeat steps 3-7 for all of your nodes.
 9.)	To test if it worked, ssh into one of your worker nodes. You should not have to enter a password.
 
+
+
 Section 5: Setting Static IPs
-	Every Pi needs a static IP to allow the cluster to communicate with each other regardless what networks it connects to. The cluster only works if they are on the same network, meaning they are all plugged into the same network switcher or router. I would recommend making the IPs correlate to the hostname of the node.
+	Every Pi needs a static IP to allow the cluster to communicate with each other regardless what networks it connects to. The cluster only works if they are on the same network, meaning they are all plugged into the same network switcher or router. I would recommend making the IPs correlate to the hostname of the node. 
+
+	>I tend to prefer to have a static network as it can make it easier to find and connect to your devices as upon restarting the whole system Raspberry Pi’s may change (and swap) their IP-address. The first thing to do is set it up on your host computer.
 5.1: Setting Static IP
 1.)	To set a static IP edit the dhcpcd.conf file. “sudo nano /etc/dhcpcd.conf”
 2.)	And add these line at the bottom (you can look at the picture for a reference)
@@ -185,3 +187,4 @@ static ip_address=~your chosen IP~
 static routers=~the same router IP as before~”
 4.)	“sudo reboot”
 5.)	Repeat steps 1-5 for all of your nodes  -->
+> THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
