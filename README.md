@@ -195,11 +195,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 3. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes. You will generate an **ssh key** on the head node and copy (the public ssh key) to each of the worker nodes.
 	1. In the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
 	1. Run `ssh-keygen -t rsa`. Make sure to press <kbd>enter</kbd> three times, accepting the default path and creating **no password**.
-	1. To copy the  head node's public ssh key into the worker nodes, type
-	```
-	scp /home/pi/.ssh/id_rsa.pub pi@WORKER_NODE_IP:/home/pi/master.pub
-	```
-	where `WORKER_NODE_IP` is the IP address of one of your nodes (remember you will do this for each worker node)
+	1. To copy the  head node's public ssh key into the worker nodes, type  `scp /home/pi/.ssh/id_rsa.pub pi@WORKER_NODE_IP:/home/pi/master.pub`, where `WORKER_NODE_IP` is the IP address of one of your nodes (remember you will do this for each worker node)
 	1. Then, **ssh** into the worker node you just copied the public key: `ssh pi@WORKER_NODE_IP`. You should be in the worker node's home directory, if not, type `cd /home/pi/`.
 	1. Run `ssh-keygen -t rsa` on the worker node. Make sure you hit enter three times, accepting the default path and creating **no password**.
 	1. Type the command `cat master.pub >> .ssh/authorized_keys` on worker node, to copy the head node's public key to the list of authorized devices that can connect to this node via ssh.
