@@ -201,6 +201,42 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Type the command `cat master.pub >> .ssh/authorized_keys` on worker node, to copy the head node's public key to the list of authorized devices that can connect to this node via ssh.
 	1. Type `exit` to get back to the head node.
 	1. Repeat steps iii to vii (3 to 7) for all of your worker nodes.
-1. To test if the process worked, ssh into one of your worker nodes. You should not have to enter a password.
+	1. To test if the process worked, ssh into one of your worker nodes. You should not have to enter a password.
+
+1. Configuring **Shared Storage**: the shared storage is a hard drive that can be accessed by all the nodes. We can do this by attaching a flash drive or external hard drive to the head node and configure it to be a network file system (NFS). 
+	1. To setup shared storage on the head node only, connect the hard drive into an available USB port. Start-up or ssh into your head node.
+		1. You can ssh into your head node by typing either `ssh pi@10.0.0.10` from a computer connected to the switch. If you have a monitor, keyboard, and mouse, just open a terminal.
+	1. Now, we need the location of the flash drive. We can find it by typing `lsblk`. It should be `sda1` must of the time. Note that the **TYPE MOUNTPOINT** should be `part`.<br><img src="img/fig15.png" alt="fig 15">
+	1. Reformat the flash drive using `sudo mkfs.ext4 /dev/sda1`. ***Be very careful you have the correct path otherwise you might do permanent (but fixable) damage to your microSD card***.
+	1. Now let's create a shared directory for this hard drive. The name that will be used throughout will be `sharedfiles`. Type `sudo mkdir /sharedfiles` to create a folder named `sharedfiles` inside the root directory of your head node.
+	1. Change the ownership of the folder by typing `sudo chown nobody.nogroup -R /sharedfiles`
+	1. Make the folder readable, writable, and executable by everyone (all the nodes): `sudo chmod 777 -R /sharedfiles`
+	1. `sudo reboot` to activate all the changes.
+1. **Automatic mounting on Head Node** Nodes should automatically mount the shared storage when they startup. The **UUID** is the path to the device acting as the shared storage. The other nodes need the UUID to know where to connect.
+	1. From the head node type `blkid` to find the UUID.
+	1. Copy the **UUID** for `/dev/sda1`.<br><img src="img/fig16.png" alt="fig 16">
+	1. To have the shared storage mounted on boot, we need to edit the `fstab` file: `sudo nano /etc/fstab`
+	1. Add the line `UUID=THE_UUID /sharedfiles ext4 defaults 0 2` at the bottom of the file.<br><img src="img/fig17.png" alt="fig 17">
+	1. Save and exit. Then type `sudo mount -a` to mount the drive.
+1. We now need to enable the worker nodes to have the ability to access the shared files.  A network file system server will let us do this.
+	1. Install the server in the head node byt typing: `sudo apt install nfs-kernel-server -y`. 
+	1. Open the `exports` file with `sudo nano /etc/exports` 
+	1. Add the following line at the bottom `/sahredfiles 10.0.0.0/8(rw,sync,no_root_squash,no_subtree_check)`, where `10.0.0.0/8` is the network IP address identifier and `/8` represents a subnet mask of `255.0.0.0`. <br><img src="img/fig19.png" alt="fig 19">
+1. Setting up the **Shared Storage on Worker Nodes**: Now we will set up each worker nodes NSF server and configure the shared storage. Ssh into the worker nodes and complete the following steps:
+	1. First, install NFS server: `sudo apt install nfs-common -y`
+	1. Same as with the head node we want to create a folder that can be edited by anyone: `sudo mkdir /sharedfiles`. *Make sure to use the same folder name as before*.
+	1. `sudo chown nobody.nogroup -R /sharedfiles` and then `sudo chmod 777 -R /sharedfiles` to fix permissions, ownership, and access.
+	1. Then, edit the `fstab` file: `sudo nano /etc/fstab` by adding the following line (taking into account the IP address of each worker node):
+	```
+	WORKER_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
+	``` 
+	<br><img src="img/fig20.png" alt="fig 20">
+	1. `sudo mount -a` to finalize changes.
+	1. Now you should be able to create a file in your shared storage directory and it should be visible on all the nodes. You can test it by doing:
+		1. On head node: `cd /sharedfiles/`, then type `sudo touch test_file`. 
+		1. Access any of the worker node and type `cd /sharedfiles/`, then type `ls -l` and a list of files should be return including `test_file` (if you recently formated the hard drive, then this will be the only file).
+		1. *If after a reboot a worker node is not seeing the shared folder, try `sudo mount -a` to remount it*
+
+## Optional Configurations
 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
