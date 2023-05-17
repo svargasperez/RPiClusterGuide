@@ -200,7 +200,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Run `ssh-keygen -t rsa` on the worker node. Make sure you hit enter three times, accepting the default path and creating **no password**.
 	1. Type the command `cat master.pub >> .ssh/authorized_keys` on worker node, to copy the head node's public key to the list of authorized devices that can connect to this node via ssh.
 	1. Type `exit` to get back to the head node.
-	1. Repeat steps 3-7 for all of your nodes.
+	1. Repeat steps iii to vii (3 to 7) for all of your worker nodes.
 1. To test if the process worked, ssh into one of your worker nodes. You should not have to enter a password.
 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
