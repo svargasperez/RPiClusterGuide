@@ -76,7 +76,7 @@ The next sections will walk through setting up the microSD cards for the cluster
 
 ## Configuring RPis
 
-Next are instructions to logging into the RPis and edit some configuration files to make them work as a cluster. Accessing the RPis can be done with or without an external monitor. Follow **1. Access RPi with external monitor** if using an external monitor, or **2. Access RPi without external monitor** otherwise (most common way).
+Next are instructions to logging into the RPis and edit some configuration files to make them work as a cluster. Accessing the RPis can be done with or without an external monitor. Follow **1. Access RPi with external monitor** if using an external monitor, or **2. Access RPi without external monitor** otherwise (most common way). As a side note, you should perform **3. Configuring Hostnames** and **4. RPi's OS Configuration** in sequence while connected to the RPis, to avoid having to connect and disconnect each time.
 
 1. **Access RPi with external monitor**:
 	1. Insert the microSD card into the RPi. 
@@ -95,8 +95,8 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Start with the RPi designated as head node, and then repeat these steps with the rest of the RPis . Insert the microSD card into the RPi (this is the card with **Raspberry Pi OS with desktop** in it). 
 	1. Connect the RPi to a computer using an Ethernet cable. Use an Ethernet to USB adapter if the computer doesn't have an Ethernet port. You might also power up the RPi by connecting the micro USB power cable to one of the computer's USB ports, or into the USB power adapter.<br><img src="img/fig5.png" alt="fig 5">
 	1. Be sure to turn on "Internet Sharing". 
-		- On macOS: Select **System Preferences &rarr; Sharing**, and make sure "Internet Sharing" is checked and the WiFi connection is being shared with the LAN connection.
-		- On Windows: *Needs instructions* 
+		- On macOS: Select **System Preferences &rarr; Sharing**, and make sure "Internet Sharing" is checked and the WiFi connection is being shared with the ethernet LAN connection.
+		- On Windows: <a href="https://www.tomshardware.com/how-to/share-internet-connection-windows-ethernet-wi-fi" target="_blank">&#10697; link Windows 10</a>. 
 	1. Open the **Terminal** and run the command `ping raspberrypi.local`. Alternatively, you can type the command `arp -a` and copy the IP address associated with `raspberrypi.local`
 	1. Copy the IP address that is associated to the RPi. Press <kbd>Ctrl</kbd> + <kbd>z</kbd>  (<kbd>^</kbd> + <kbd>z</kbd> on macOS).<br><img src="img/fig6.png" alt="fig 6">
 	1. Then type the command `ssh pi@192.168.2.8`, where `192.168.2.8` is the IP address you copied in the previous step.
@@ -112,6 +112,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 		- `sudo hostname headnode001`, where `headnode001` is the host name you chose for the RPi.
 		- `sudo nano /etc/hostname`, this will open the file `/etc/hostname` using the text editor **nano**. Delete everything, and enter the same host name, i.e., `headnode001` or the host name chosen for the RPi. To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS). <br><img src="img/fig8.png" alt="fig 8">
 		- `sudo nano /etc/hosts`,  and replace `raspberrypi` with your chosen host name (e.g., `headnode001` ). To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS).<br><img src="img/fig8b.png" alt="fig 8b">
+	1. Repeat for the rest of RPis, using an appropiate hostnames for each of them (`headnode001`, `workernode002`, `workernode003`, and `workernode004`, or simply `node001`, `node002`, `node003`, and `node004`).
 
 1. **RPi's OS Configuration**:
 	1. On a **Terminal** in the RPi type the command `sudo raspi-config` to bring up the software configuration tool. <br><img src="img/fig9.png" alt="fig 9">	
@@ -158,36 +159,48 @@ Next are instructions to logging into the RPis and edit some configuration files
  
 ## Cluster Configurations
 
-1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes. You will generate an **ssh key** on the head node and copy (the public ssh key) to the rest of the worker nodes.
-	1. On the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
+1. Setting **Static IP**s: We need to set static IP addresses for the nodes to allow the cluster to communicate via an interconnection network. The cluster can do this if we create a local area network (LAN) using a switch (or router), ethernet cables, and set static IP addresses in each node, such that, they all belong to the same network. We would recommend making these IP addresses correlate to the hostanames you chose for each node, like:
+
+| Node        | Hostanme    | IP Address  |
+| ----------- | ----------- | ----------- |
+| head        | node001     | 10.0.0.10   |
+| worker 1    | node002     | 10.0.0.20   | 
+| worker 2    | node003     | 10.0.0.30   |
+| worker 3    | node004     | 10.0.0.40   |
+You should set the gateway (or router) IP address to `10.0.0.1`, so do not use this address for other nodes. If you want to continue using VNC to access the cluster, **after changing the IP addresses** you will have to manually change the settings of your ethernet adapter in the VNC computer to one that belongs to the network, for example `10.0.0.50` as the IP address, with a subnet mask (or mask) `255.255.255.0` and router (or gateway) IP address of `10.0.0.1`. On Windows, you will probably need to set up a DNS server IP Address, so you can type `8.8.8.8`.
+
+1. Now it is time to connect all the RPIs to the network using the Ethernet switch. Connect each ethernet cable to the RPI's network interface and an available port in the switch. There should be an available port (if you have a switch with five or more ports) to connect your computer (the one using VNC to access the cluster). You will continue accessing each RPI in the same fashion as before, but once the IP addresses are changed, you will need them to connect via VNC.
+	1. While connected to the RPIs, set the static IP by editing the `dhcpcd.conf` file: `sudo nano /etc/dhcpcd.conf`
+	1. **For the head node** add these lines at the bottom of the file:
+	```
+	interface eth0
+	static ip_address=10.0.0.10
+	static routers=10.0.0.1 
+	static domain_name_servers=
+	static domain_search=
+	noipv6
+	```
+	1. **For worker nodes** add the following lines, where `WORKER_NODE_IP` is one of the IP addresses you chose:
+	```
+	interface eth0
+	static ip_address=WORKER_NODE_IP
+	static routers=10.0.0.1
+	```
+	1. After saving the changes and closing the `dhcpcd.conf` file type `sudo reboot` to restart the RPIs and apply these changes. **Remember that now you will have a new IP address on your RPis.**
+
+1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes. You will generate an **ssh key** on the head node and copy (the public ssh key) to each of the worker nodes.
+	1. In the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
 	1. Run `ssh-keygen -t rsa`. Make sure to press <kbd>enter</kbd> three times, accepting the default path and creating **no password**.
-	1. To copy the  head node's public ssh key into the worker nodes, type <pre>scp /home/pi/.ssh/id_rsa.pub pi@<b>worker_node_IP</b>:/home/pi/master.pub</pre>, where <pre><b>worker_node_IP</b></pre> is the IP address of one of your nodes (remember you will do this for all t (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
-<!-- 4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
-5.)	Run “ssh-keygen -t rsa” on worker node. Make sure you hit enter three times. Accepting the default path and creating no password
-6.)	“cat master.pub >> .ssh/authorized_keys” on worker node
-7.)	“exit” on worker node
-8.)	Repeat steps 3-7 for all of your nodes.
-9.)	To test if it worked, ssh into one of your worker nodes. You should not have to enter a password.
+	1. To copy the  head node's public ssh key into the worker nodes, type
+	```
+	scp /home/pi/.ssh/id_rsa.pub pi@WORKER_NODE_IP:/home/pi/master.pub
+	```
+	where `WORKER_NODE_IP` is the IP address of one of your nodes (remember you will do this for each worker node)
+	1. Then, **ssh** into the worker node you just copied the public key: `ssh pi@WORKER_NODE_IP`. You should be in the worker node's home directory, if not, type `cd /home/pi/`.
+	1. Run `ssh-keygen -t rsa` on the worker node. Make sure you hit enter three times, accepting the default path and creating **no password**.
+	1. Type the command `cat master.pub >> .ssh/authorized_keys` on worker node, to copy the head node's public key to the list of authorized devices that can connect to this node via ssh.
+	1. Type `exit` to get back to the head node.
+	1. Repeat steps 3-7 for all of your nodes.
+1. To test if the process worked, ssh into one of your worker nodes. You should not have to enter a password.
 
-
-
-Section 5: Setting Static IPs
-	Every Pi needs a static IP to allow the cluster to communicate with each other regardless what networks it connects to. The cluster only works if they are on the same network, meaning they are all plugged into the same network switcher or router. I would recommend making the IPs correlate to the hostname of the node. 
-
-	>I tend to prefer to have a static network as it can make it easier to find and connect to your devices as upon restarting the whole system Raspberry Pi’s may change (and swap) their IP-address. The first thing to do is set it up on your host computer.
-5.1: Setting Static IP
-1.)	To set a static IP edit the dhcpcd.conf file. “sudo nano /etc/dhcpcd.conf”
-2.)	And add these line at the bottom (you can look at the picture for a reference)
-“interface eth0
-static ip_address=~your chosen IP~
-static routers=~your chosen router IP~ (this will be the IP of the switch)
-static domain_name_servers=
-static domain_search= 
-noipv6”
-3.)	For the non-head nodes only add
-“interface eth0
-static ip_address=~your chosen IP~
-static routers=~the same router IP as before~”
-4.)	“sudo reboot”
-5.)	Repeat steps 1-5 for all of your nodes --> 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
