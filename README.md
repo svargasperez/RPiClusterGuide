@@ -161,18 +161,18 @@ Next are instructions to logging into the RPis and edit some configuration files
 
 1. Setting **Static IP**s: We need to set static IP addresses for the nodes to allow the cluster to communicate via an interconnection network. The cluster can do this if we create a local area network (LAN) using a switch (or router), ethernet cables, and set static IP addresses in each node, such that, they all belong to the same network. We would recommend making these IP addresses correlate to the hostanames you chose for each node, like:
 
-| Node        | Hostanme    | IP Address  |
-| ----------- | ----------- | ----------- |
-| head        | node001     | 10.0.0.10   |
-| worker 1    | node002     | 10.0.0.20   | 
-| worker 2    | node003     | 10.0.0.30   |
-| worker 3    | node004     | 10.0.0.40   |
+	| Node        | Hostanme    | IP Address  |
+	| ----------- | ----------- | ----------- |
+	| head        | node001     | 10.0.0.10   |
+	| worker 1    | node002     | 10.0.0.20   | 
+	| worker 2    | node003     | 10.0.0.30   |
+	| worker 3    | node004     | 10.0.0.40   |
 
-You should set the gateway (or router) IP address to `10.0.0.1`, so do not use this address for other nodes. If you want to continue using VNC to access the cluster, **after changing the IP addresses** you will have to manually change the settings of your ethernet adapter in the VNC computer to one that belongs to the network, for example `10.0.0.50` as the IP address, with a subnet mask (or mask) `255.255.255.0` and router (or gateway) IP address of `10.0.0.1`. On Windows, you will probably need to set up a DNS server IP Address, so you can type `8.8.8.8`.
+	You should set the gateway (or router) IP address to `10.0.0.1`, so do not use this address for other nodes. If you want to continue using VNC to access the cluster, **after changing the IP addresses** you will have to manually change the settings of your ethernet adapter in the VNC computer to one that belongs to the network, for example `10.0.0.50` as the IP address, with a subnet mask (or mask) `255.255.255.0` and router (or gateway) IP address of `10.0.0.1`. On Windows, you will probably need to set up a DNS server IP Address, so you can type `8.8.8.8`.
 
 2. Now it is time to connect all the RPIs to the network using the Ethernet switch. Connect each ethernet cable to the RPI's network interface and an available port in the switch. There should be an available port (if you have a switch with five or more ports) to connect your computer (the one using VNC to access the cluster). You will continue accessing each RPI in the same fashion as before, but once the IP addresses are changed, you will need them to connect via VNC.
 	1. While connected to the RPIs, set the static IP by editing the `dhcpcd.conf` file: `sudo nano /etc/dhcpcd.conf`
-	1. **For the head node** add these lines at the bottom of the file:
+	2. **For the head node** add these lines at the bottom of the file:
 	```
 	interface eth0
 	static ip_address=10.0.0.10
@@ -181,7 +181,7 @@ You should set the gateway (or router) IP address to `10.0.0.1`, so do not use t
 	static domain_search=
 	noipv6
 	```
-	1. **For worker nodes** add the following lines, where `WORKER_NODE_IP` is one of the IP addresses you chose:
+	3. **For worker nodes** add the following lines, where `WORKER_NODE_IP` is one of the IP addresses you chose:
 	```
 	interface eth0
 	static ip_address=WORKER_NODE_IP
@@ -190,7 +190,7 @@ You should set the gateway (or router) IP address to `10.0.0.1`, so do not use t
 	static domain_search=
 	noipv6
 	```
-	1. After saving the changes and closing the `dhcpcd.conf` file type `sudo reboot` to restart the RPIs and apply these changes. **Remember that now you will have a new IP address on your RPis.**
+	4. After saving the changes and closing the `dhcpcd.conf` file type `sudo reboot` to restart the RPIs and apply these changes. **Remember that now you will have a new IP address on your RPis.**
 
 3. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes. You will generate an **ssh key** on the head node and copy (the public ssh key) to each of the worker nodes.
 	1. In the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
