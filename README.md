@@ -69,7 +69,6 @@ The next sections will walk through setting up the microSD cards for the cluster
 	1. Click the gear symbol to open the **Advanced options**. 
 		1. Check **Set hostname** and use the default hostname `raspberrypi.local`.
 		1. Check **Enable SSH** and then check **Use password authentication**.
-		1. Check **Set hostname** and use the default hostname `raspberrypi.local`.
 		1. Check **Set Username and pasword** and use `pi` as the **Username** and `raspberry` as the **Password**.
 		1. Click **Save**
 	1. Click **WRITE** <br><img src="img/fig3.png" alt="fig 3">
@@ -98,7 +97,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Be sure to turn on "Internet Sharing". 
 		- On macOS: Select **System Preferences &rarr; Sharing**, and make sure "Internet Sharing" is checked and the WiFi connection is being shared with the LAN connection.
 		- On Windows: *Needs instructions* 
-	1. Open the **Terminal** and run the command `ping raspberrypi.local`
+	1. Open the **Terminal** and run the command `ping raspberrypi.local`. Alternatively, you can type the command `arp -a` and copy the IP address associated with `raspberrypi.local`
 	1. Copy the IP address that is associated to the RPi. Press <kbd>Ctrl</kbd> + <kbd>z</kbd>  (<kbd>^</kbd> + <kbd>z</kbd> on macOS).<br><img src="img/fig6.png" alt="fig 6">
 	1. Then type the command `ssh pi@192.168.2.8`, where `192.168.2.8` is the IP address you copied in the previous step.
 	1. Type `Yes` and press <kbd>enter</kbd> (<kbd>return</kbd> in macOS).
@@ -119,7 +118,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Select "Change User Password" and follow the instructions. *It is recommended (for the purpose of this guide) to make all passwords the same for each RPi*.
 	1. Next, open "Localisation Options" &rarr; "Change Locale". Scroll down until the `en_US.UTF-8 UTF-8` option is highlighted and press <kbd>enter</kbd>, then <kbd>enter</kbd> again.
 		- If it cannot be set by default, exit the menu and type `sudo nano /etc/locale.gen`, uncomment the line containing `en_US.UTF-8 UTF-8` (if it is commented out). Then, in the **Terminal** type `locale-gen` and try again. If that still does not work, try `sudo dpkg-reconfigure locales` and select the correct locale.
-	1. Once back to the software configuration tool window, select "Localisation Options" and change the timezone.
+	1. Once back to the software configuration tool window, select  "Localisation [sic] Options" and change the timezone.
 	1. Next, choose "Advanced Options" &rarr; "Expand Filesystem" and press <kbd>enter</kbd>.
 	1. Finally, select the option "Update".
 	1. To activate all these changes, type `sudo reboot`. To shut down this node, the command `sudo shutdown -h now` can be used.
@@ -159,10 +158,10 @@ Next are instructions to logging into the RPis and edit some configuration files
  
 ## Cluster Configurations
 
-1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes.
+1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes. You will generate an **ssh key** on the head node and copy (the public ssh key) to the rest of the worker nodes.
 	1. On the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
 	1. Run `ssh-keygen -t rsa`. Make sure to press <kbd>enter</kbd> three times, accepting the default path and creating **no password**.
-	1. scp /home/pi/.ssh/id_rsa.pub pi@~worker nodes IP~:/home/pi/master.pub”    (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
+	1. To copy the  head node's public ssh key into the worker nodes, type <pre>scp /home/pi/.ssh/id_rsa.pub pi@<b>worker_node_IP</b>:/home/pi/master.pub</pre>, where <pre><b>worker_node_IP</b></pre> is the IP address of one of your nodes (remember you will do this for all t (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
 <!-- 4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
 5.)	Run “ssh-keygen -t rsa” on worker node. Make sure you hit enter three times. Accepting the default path and creating no password
 6.)	“cat master.pub >> .ssh/authorized_keys” on worker node
