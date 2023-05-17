@@ -6,7 +6,7 @@
 >
 > For questions, please contact Dr. Vargas-Pérez via [e-mail](mailto:sandino.vargasperez@kzoo.edu).
 
-The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, but it can be used to build a cluster of any size. The step-by-step instructions will detail how to assemble hardware, configure software, and the setup needed to have a fully functioning RPi cluster. Raspberry Pi 3 B+s were used for this project, although with a few tweaks, any modern RPi should work.
+The guide was designed to build a cluster using 4 Raspberry Pi (RPi) computers, but it can be used to build a cluster of any size. The step-by-step instructions will detail how to assemble hardware, configure software, and the setup needed to have a fully functioning RPi cluster. The **Raspberry Pi 3 B+** model was used for this project, although with a few tweaks, any modern RPi should work.
 
 # Hardware Setup and Assembly
 
@@ -52,23 +52,28 @@ Below are instructions to assemble a 4 RPi cluster. One RPi will be used as a he
 The next sections will walk through setting up the microSD cards for the cluster. These examples were using macOS, but all the software needed can be downloaded for Windows OS.
 
 ### Software Download Requirements:
-- Latest version of **Raspberry Pi OS with desktop** for head node and **Raspberry Pi OS Lite** for worker node <a href="https://www.amazon.com/dp/B07BGYGLZG/?coliid=I3A352BNN34AM2&colid=GT5EJQ2GW4AP&psc=1" target="_blank">&#10697;</a>.
-- **Etcher** to install (flash) Raspberry Pi OS images into the microSD card <a href="https://www.balena.io/etcher/" target="_blank">&#10697;</a>.
-- **VNC Viewer** to connect to the head node using an external computer (optional) <a href="https://www.realvnc.com/en/connect/download/viewer/" target="_blank">&#10697;</a>.
+- Latest version of **Raspberry Pi OS with desktop** for head node and **Raspberry Pi OS Lite** for worker node <a href="https://www.raspberrypi.com/software/operating-systems/" target="_blank">&#10697; link</a>.
+- **Raspberry Pi Imager** to install (flash) Raspberry Pi OS images into the microSD card <a href="https://www.raspberrypi.com/software/" target="_blank">&#10697; link</a>.
+- **VNC Viewer** to connect to the head node using an external computer (optional, but recommended) <a href="https://www.realvnc.com/en/connect/download/viewer/" target="_blank">&#10697; link</a>.
 
 
 ## Setting Up MicroSD Cards 
 
 1. Formatting MicroSD Card:
 	1. Plug microSD card into a computer. *Use a USB to microSD adapter if the computer doesn't have microSD or SD card slots*.
-	1. On macOS: open **Disk Utility** and navigate to the microSD card. Select **Erase** in the top center of the window. In the "Format" dropdown menu, select "MS-DOT (FAT)". Click **Erase** (the name of the device does not matter).
+	1. On macOS: open **Disk Utility** and navigate to the microSD card. Select **Erase** in the top center of the window. In the "Format" dropdown menu, select "MS-DOS (FAT)". Click **Erase** (the name of the device does not matter).
 	1. On Windows: use **Windows Explorer** to locate the microSD card, right-click on it, and select **Format**. Select **Quick Format** and click start.
-1. Open Etcher to flash the microSD card:
-	1. Click **Select image** and navigate to where the Raspberry Pi OS was downloaded. The files should end in `.img`. Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
-	1. Click **Select target** and chose the microSD card.
-	1. Click **Flash!** <br><img src="img/fig3.png" alt="fig 3">
-1. Remove and re-insert the flashed microSD card into the computer. *Must of the time Etcher will automatically eject SD cards when finished*
-1. Using a text editor such as **Sublime Text**, create an empty file named `ssh` (without an extension) and save it on the microSD card. Do this for all 4 microSD cards. Alternatively, navigate to the microSD card via terminal, and use the command `touch ssh` to create the empty file.
+1. Open Raspberry Pi Imager to flash the microSD card:
+	1. Click **CHOOSE OS** and select the last option **Use custom**. Navigate to where the Raspberry Pi OS was downloaded. The files should end in `.img` or `.img.xz`. Select **Raspberry Pi OS with desktop** if flashing the head node's microSD card, or  **Raspberry Pi OS Lite** if flashing the worker nodes' card.
+	1. Click **CHOOSE STORAGE** and chose the microSD card.
+	1. Click the gear symbol to open the **Advanced options**. 
+		1. Check **Set hostname** and use the default hostname `raspberrypi.local`.
+		1. Check **Enable SSH** and then check **Use password authentication**.
+		1. Check **Set hostname** and use the default hostname `raspberrypi.local`.
+		1. Check **Set Username and pasword** and use `pi` as the **Username** and `raspberry` as the **Password**.
+		1. Click **Save**
+	1. Click **WRITE** <br><img src="img/fig3.png" alt="fig 3">
+1. Remove the flashed microSD card from the computer. *Must of the time Raspberry Pi Imager will automatically eject SD cards when finished*
 
 ## Configuring RPis
 
@@ -83,10 +88,9 @@ Next are instructions to logging into the RPis and edit some configuration files
 
     If the RPi has started but the external monitor is not getting a signal, unplug RPi and remove its microSD card. Insert the card into a computer and navigate to its contents. Locate and open the file `config.txt`. If the following lines are commented out, uncomment them by removing the `#` in front of them (if they don't exist, add them): 
     ```
-    hdmi_force_hotplug=1
-    hdmi_drive=2
+    hdmi_safe=1 
     ```
-    Re-insert the microSD in the RPi and turn it on. If the previous modifications didn't fix the problem, check that the monitor is connected properly to the correct input, and the HDMI cable is functional.
+    This setting will be used to try to boot the RPi with maximum HDMI compatibility. Re-insert the microSD in the RPi and turn it on. If the previous modifications didn't fix the problem, check that the monitor is connected properly to the correct input, and the HDMI cable is functional.
 
 1. **Access RPi without external monitor** (most common way): This step will require an Ethernet to USB adapter to connect the RPi via Ethernet cable to a computer using **VNC viewer**. If the computer has an Ethernet port, the adapter is not needed.
 	1. Start with the RPi designated as head node, and then repeat these steps with the rest of the RPis . Insert the microSD card into the RPi (this is the card with **Raspberry Pi OS with desktop** in it). 
@@ -155,11 +159,11 @@ Next are instructions to logging into the RPis and edit some configuration files
  
 ## Cluster Configurations
 
-<!-- 1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes.
+1. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes.
 	1. On the head node, open a **Terminal** and move to the RPi directory: `cd /home/pi/`.
-	1. Run `ssh-keygen -t rsa`. Make sure to press <kbd>enter</kbd> three times, accepting the default path and creating no password.
-3.)	“scp /home/pi/.ssh/id_rsa.pub pi@~worker nodes IP~:/home/pi/master.pub”    (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
-4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
+	1. Run `ssh-keygen -t rsa`. Make sure to press <kbd>enter</kbd> three times, accepting the default path and creating **no password**.
+	1. scp /home/pi/.ssh/id_rsa.pub pi@~worker nodes IP~:/home/pi/master.pub”    (You can find your nodes IP by sshing into a node and using the command “IP a”. Locate the “eth0” section and look for the inet, stopping at the “/”)
+<!-- 4.)	Then, ssh into that node “ssh pi@~worker nodes IP~”
 5.)	Run “ssh-keygen -t rsa” on worker node. Make sure you hit enter three times. Accepting the default path and creating no password
 6.)	“cat master.pub >> .ssh/authorized_keys” on worker node
 7.)	“exit” on worker node
@@ -186,5 +190,5 @@ noipv6”
 static ip_address=~your chosen IP~
 static routers=~the same router IP as before~”
 4.)	“sudo reboot”
-5.)	Repeat steps 1-5 for all of your nodes  -->
+5.)	Repeat steps 1-5 for all of your nodes --> 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
