@@ -271,12 +271,12 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Change the name of your cluster by changing the line `ClusterName=` 
 	<br><img src="img/fig24.png" alt="fig 24">
 	1. Now, we have to add the nodes under the “COMPUTE NODES” section of the file:
-	```
-	NodeName=node001 NodeAddr=10.0.0.10 CPUs=4 State=UNKNOWN
-	NodeName=node002 NodeAddr=10.0.0.20 CPUs=4 State=UNKNOWN
-	NodeName=node003 NodeAddr=10.0.0.30 CPUs=4 State=UNKNOWN
-	NodeName=node004 NodeAddr=10.0.0.40 CPUs=4 State=UNKNOWN
-	```
+		```
+		NodeName=node001 NodeAddr=10.0.0.10 CPUs=4 State=UNKNOWN
+		NodeName=node002 NodeAddr=10.0.0.20 CPUs=4 State=UNKNOWN
+		NodeName=node003 NodeAddr=10.0.0.30 CPUs=4 State=UNKNOWN
+		NodeName=node004 NodeAddr=10.0.0.40 CPUs=4 State=UNKNOWN
+		```
 		
 		- `CPUs=4` was chosen because the Raspberry Pi 3 B+ used in this guide have a 1.2GHz 64-bit quad-core Arm Cortex-A53 CPU. A quick google search can tell you how many cores your type of Raspberry Pi has. <br><img src="img/fig25.png" alt="fig 25">
 
