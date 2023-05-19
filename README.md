@@ -277,9 +277,9 @@ Next are instructions to logging into the RPis and edit some configuration files
 	NodeName=node003 NodeAddr=10.0.0.30 CPUs=4 State=UNKNOWN
 	NodeName=node004 NodeAddr=10.0.0.40 CPUs=4 State=UNKNOWN
 	```
-	`CPUs=4` was chosen because the Raspberry Pi 3 B+ used in this guide have a 1.2GHz 64-bit quad-core Arm Cortex-A53 CPU. A quick google search can tell you how many cores your type of Raspberry Pi has. <br><img src="img/fig25.png" alt="fig 25">
-	6. Comment out the pre-existing lines starting with `NodeName=` and `PartitionName=` by putting a `#` in front. 
-	<br><img src="img/fig25.png" alt="fig 25">
+		- `CPUs=4` was chosen because the Raspberry Pi 3 B+ used in this guide have a 1.2GHz 64-bit quad-core Arm Cortex-A53 CPU. A quick google search can tell you how many cores your type of Raspberry Pi has. <br><img src="img/fig25.png" alt="fig 25">
+
+	6. Comment out the pre-existing lines starting with `NodeName=` and `PartitionName=` by putting a `#` in front. <br><img src="img/fig25.png" alt="fig 25">
 	1. Now, add your own partition:
 	```
 	PartitionName=YOUR_CLUSTER_NAME Nodes=node[002-004] Default=YES MaxTime=INFINITE State=UP
