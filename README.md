@@ -231,7 +231,8 @@ Next are instructions to logging into the RPis and edit some configuration files
 	WORKER_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
 	``` 
 	<img src="img/fig20.png" alt="fig 20"/>
-	1. `sudo mount -a` to finalize changes.
+
+	2. `sudo mount -a` to finalize changes.
 	1. Now you should be able to create a file in your shared storage directory and it should be visible on all the nodes. You can test it by doing:
 		1. On head node: `cd /sharedfiles/`, then type `sudo touch test_file`. 
 		1. Access any of the worker node and type `cd /sharedfiles/`, then type `ls -l` and a list of files should be return including `test_file` (if you recently formated the hard drive, then this will be the only file).
