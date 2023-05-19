@@ -276,7 +276,50 @@ Next are instructions to logging into the RPis and edit some configuration files
 	NodeName=node004 NodeAddr=10.0.0.40 CPUs=4 State=UNKNOWN
 	```
 	`CPUs=4` was chosen because the Raspberry Pi 3 B+ used in this guide have a 1.2GHz 64-bit quad-core Arm Cortex-A53 CPU. A quick google search can tell you how many cores your type of Raspberry Pi has. <br><img src="img/fig25.png" alt="fig 25">
-	6. 
+	6. Comment out the pre-existing lines starting with `NodeName=` and `PartitionName=` by putting a `#` in front. 
+	<br><img src="img/fig25.png" alt="fig 25">
+	1. Now, add your own partition:
+	```
+	PartitionName=YOUR_CLUSTER_NAME Nodes=node[002-004] Default=YES MaxTime=INFINITE State=UP
+	```
+		1. For the `Nodes=` portion, make sure it matches the name you chose for your working nodes. For this guide, it was chosen to be `node` followed by a number (`[002-004]` represents node002, node003, and node004, repectively).
+		1. For `PartitionName=` you can choose the name of your cluster.
+		
+	8. Make sure to exit and save (<kbd>ctrl</kbd> + <kbd>x</kbd>, then press <kbd>Y</kbd>).
+	1. We need to create a file that tells Slurm what resources it has access to, so navigate to slurm's directory: `cd /etc/slurm-llnl`.
+	1. Open the configuration file `sudo nano cgroup.conf` and add:
+	```
+	CgroupMountpoint="/sys/fs/cgroup"
+	CgroupAutomount=yes
+	CgroupReleaseAgentDir="/etc/slurm-llnl/cgroup"
+	AllowedDevicesFile="/etc/slurm-llnl/cgroup_allowed_devices_file.conf"
+	ConstrainCores=no
+	TaskAffinity=no
+	ConstrainRAMSpace=yes
+	ConstrainSwapSpace=no
+	ConstrainDevices=no
+	AllowedRamSpace=100
+	AllowedSwapSpace=0
+	MaxRAMPercent=100
+	MaxSwapPercent=100
+	MinRAMSpace=30
+	``` 
+	<img src="img/fig27.png" alt="fig 27">
+
+	11. Save and exit. 
+	1. Now, create a file to tell slurm about allowed devices: `sudo nano /etc/slurm-llnl/cgroup_allowed_devices_file.conf` and add the following lines:
+	```
+	/dev/null
+	/dev/urandom
+	/dev/zero
+	/dev/sda*
+	/dev/cpu/*/*
+	/dev/pts/*
+	/sharedfiles*”
+	```
+	<img src="img/fig28.png" alt="fig 28">
+
+	13. Save and exit.
 
 
 
