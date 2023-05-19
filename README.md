@@ -264,7 +264,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	```
 	SlurmctldHost=node001(10.0.0.10)
 	```
-	<img src="img/fig22.png" alt="fig 22"/>
+		<img src="img/fig22.png" alt="fig 22"/>
 
 	3. Next, double-check that the lines `SelectType=select/cons_res` and `SelectTypeParameters=CR_Core` are uncommented (or exist) in the file 
 	<br><img src="img/fig23.png" alt="fig 23">
@@ -284,8 +284,8 @@ Next are instructions to logging into the RPis and edit some configuration files
 	```
 	PartitionName=YOUR_CLUSTER_NAME Nodes=node[002-004] Default=YES MaxTime=INFINITE State=UP
 	```
-		1. For the `Nodes=` portion, make sure it matches the name you chose for your working nodes. For this guide, it was chosen to be `node` followed by a number (`[002-004]` represents node002, node003, and node004, repectively).
-		1. For `PartitionName=` you can choose the name of your cluster.
+	- For the `Nodes=` portion, make sure it matches the name you chose for your working nodes. For this guide, it was chosen to be `node` followed by a number (`[002-004]` represents node002, node003, and node004, repectively).
+	- For `PartitionName=` you can choose the name of your cluster.
 		
 	8. Make sure to exit and save (<kbd>ctrl</kbd> + <kbd>x</kbd>, then press <kbd>Y</kbd>).
 	1. We need to create a file that tells Slurm what resources it has access to, so navigate to slurm's directory: `cd /etc/slurm-llnl`.
