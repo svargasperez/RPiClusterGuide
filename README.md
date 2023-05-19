@@ -173,23 +173,23 @@ Next are instructions to logging into the RPis and edit some configuration files
 2. Now it is time to connect all the RPIs to the network using the Ethernet switch. Connect each ethernet cable to the RPI's network interface and an available port in the switch. There should be an available port (if you have a switch with five or more ports) to connect your computer (the one using VNC to access the cluster). You will continue accessing each RPI in the same fashion as before, but once the IP addresses are changed, you will need them to connect via VNC.
 	1. While connected to the RPIs, set the static IP by editing the `dhcpcd.conf` file: `sudo nano /etc/dhcpcd.conf`
 	2. **For the head node** add these lines at the bottom of the file:
-	```
-	interface eth0
-	static ip_address=10.0.0.10
-	static routers=10.0.0.1 
-	static domain_name_servers=
-	static domain_search=
-	noipv6
-	```
+		```
+		interface eth0
+		static ip_address=10.0.0.10
+		static routers=10.0.0.1 
+		static domain_name_servers=
+		static domain_search=
+		noipv6
+		```
 	3. **For worker nodes** add the following lines, where `WORKER_NODE_IP` is one of the IP addresses you chose:
-	```
-	interface eth0
-	static ip_address=WORKER_NODE_IP
-	static routers=10.0.0.1
-	static domain_name_servers=
-	static domain_search=
-	noipv6
-	```
+		```
+		interface eth0
+		static ip_address=WORKER_NODE_IP
+		static routers=10.0.0.1
+		static domain_name_servers=
+		static domain_search=
+		noipv6
+		```
 	4. After saving the changes and closing the `dhcpcd.conf` file type `sudo reboot` to restart the RPIs and apply these changes. **Remember that now you will have a new IP address on your RPis.**
 
 3. Configuring **Auto Login**: these next steps will enable passwordless login between the head node and the worker nodes. You will generate an **ssh key** on the head node and copy (the public ssh key) to each of the worker nodes.
@@ -227,10 +227,10 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Same as with the head node we want to create a folder that can be edited by anyone: `sudo mkdir /sharedfiles`. *Make sure to use the same folder name as before*.
 	1. `sudo chown nobody.nogroup -R /sharedfiles` and then `sudo chmod 777 -R /sharedfiles` to fix permissions, ownership, and access.
 	1. Then, edit the `fstab` file: `sudo nano /etc/fstab` by adding the following line (taking into account the IP address of each worker node):
-	```
-	WORKER_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
-	``` 
-	<img src="img/fig20.png" alt="fig 20"/>
+		```
+		WORKER_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
+		``` 
+		<img src="img/fig20.png" alt="fig 20"/>
 
 	5. `sudo mount -a` to finalize changes.
 	1. Now you should be able to create a file in your shared storage directory and it should be visible on all the nodes. You can test it by doing:
@@ -324,7 +324,32 @@ Next are instructions to logging into the RPis and edit some configuration files
 		<img src="img/fig28.png" alt="fig 28">
 
 	13. Save and exit.
+<!-- 
+7.3: Sharing Configuration (Head Node Only)
+For Slurm to control other nodes they need to have the same configuration and munge key. A munge key is a type of authentication service. You can easily share your configuration and munge key using the shared storage. 
+1.)	First, move back into the slurm-llnl folder. “cd /etc/slurm-llnl/”
+2.)	Then, copy and paste the two files we just created into our shared storage directory. 
+“sudo cp slurm.conf cgroup.conf cgroup_allowed_devices_file.conf /~your shared storage name~”
+3.)	Now copy and paste the munge key in the shared storage system.
+ 	“sudo cp /etc/munge/munge.key /~your shared storage name~”
+4.)	Finally, we need to enable and start Munge. 
+	“sudo systemctl enable munge
+sudo systemctl start munge”
+5.)	And the Slurm daemon
+“sudo systemctl enable slurmd
+sudo systemctl start slurmd”
+6.)	And the Slurm controller
+“sudo systemctl enable slurmctld
+sudo systemctl start slurmctld”	
 
-
+7.4: Non-Head Nodes Slurm Set-Up (All WorkerNodes)
+This section will walk you through setting up all of your worker nodes. Make sure your head node is still running to allow access to the shared storage.  Once again you can do each node individually or all nodes at the same time.
+1.)	Install the Slurm client. “sudo apt install slurmd slurm-client -y”
+2.)	Just like before update the hosts file. “sudo nano /etc/hosts”
+3.)	Add all of the other nodes and their IPs excluding that.
+~node IP~	~node hostname~
+~node IP~	~node hostname~
+~node IP~	~node hostname~
+ -->
 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
