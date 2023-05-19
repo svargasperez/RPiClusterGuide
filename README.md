@@ -266,8 +266,10 @@ Next are instructions to logging into the RPis and edit some configuration files
 	```
 	<img src="img/fig22.png" alt="fig 22"/>
 
-	3. Next, double-check that the lines `SelectType=select/cons_res` and `SelectTypeParameters=CR_Core` are uncommented (or exist) in the file <br><img src="img/fig23.png" alt="fig 23">
-	1. Change the name of your cluster by changing the line `ClusterName=` <br><img src="img/fig24.png" alt="fig 24">
+	3. Next, double-check that the lines `SelectType=select/cons_res` and `SelectTypeParameters=CR_Core` are uncommented (or exist) in the file 
+	<br><img src="img/fig23.png" alt="fig 23">
+	1. Change the name of your cluster by changing the line `ClusterName=` 
+	<br><img src="img/fig24.png" alt="fig 24">
 	1. Now, we have to add the nodes under the “COMPUTE NODES” section of the file:
 	```
 	NodeName=node001 NodeAddr=10.0.0.10 CPUs=4 State=UNKNOWN
