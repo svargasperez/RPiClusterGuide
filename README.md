@@ -232,7 +232,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	``` 
 	<img src="img/fig20.png" alt="fig 20"/>
 
-	2. `sudo mount -a` to finalize changes.
+	5. `sudo mount -a` to finalize changes.
 	1. Now you should be able to create a file in your shared storage directory and it should be visible on all the nodes. You can test it by doing:
 		1. On head node: `cd /sharedfiles/`, then type `sudo touch test_file`. 
 		1. Access any of the worker node and type `cd /sharedfiles/`, then type `ls -l` and a list of files should be return including `test_file` (if you recently formated the hard drive, then this will be the only file).
@@ -250,7 +250,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	```
 	<img src="img/fig21.png" alt="fig 21"/>
 
-	1. Save and exit nano (<kbd>ctrl</kbd> + <kbd>x</kbd>, <kbd>^</kbd> + <kbd>x</kbd> on macOS, then press <kbd>Y</kbd> follow by <kbd>enter</kbd>).
+	3. Save and exit nano (<kbd>ctrl</kbd> + <kbd>x</kbd>, <kbd>^</kbd> + <kbd>x</kbd> on macOS, then press <kbd>Y</kbd> follow by <kbd>enter</kbd>).
 	1. Install the slurm controller using `sudo apt install slurm-wlm -y`
 	1. Slurm comes with default settings but we will need to edit them. Move into the slurm folder `cd /etc/slurm-llnl`. 
 	1. First, we will set the right permission to the file we will use as our base configuration: `sudo chmod -R 777 /usr/share/doc/slurm-client/examples/slurm.conf.simple.gz .`
