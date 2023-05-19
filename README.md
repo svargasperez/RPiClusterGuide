@@ -243,12 +243,12 @@ Next are instructions to logging into the RPis and edit some configuration files
 1. **COnfiguring SLURM**: Slurm is a job scheduler. It is the software that determines which node should execute the next process, giving a more managed parallel computing experience. The head node sends processes to be executed to all the other nodes (for this particular configuration, the head node does not execute any parallel code itself).
 	1. To install in the head node only, ssh into the head node: `ssh pi@10.0.0.10`, where `10.0.0.10` is the IP address of your head node.
 	1. Edit the `hosts` file `sudo nano /etc/hosts`. We are going to add the hostnames and IPs of the other nodes in this file (at the bottom) of the file in this format:
-	```
-	WORKER_NODE_IP	WORKER_HOSTNAME
-	WORKER_NODE_IP	WORKER_HOSTNAME
-	WORKER_NODE_IP	WORKER_HOSTNAME
-	```
-	<img src="img/fig21.png" alt="fig 21"/>
+		```
+		WORKER_NODE_IP	WORKER_HOSTNAME
+		WORKER_NODE_IP	WORKER_HOSTNAME
+		WORKER_NODE_IP	WORKER_HOSTNAME
+		```
+		<img src="img/fig21.png" alt="fig 21"/>
 
 	3. Save and exit nano (<kbd>ctrl</kbd> + <kbd>x</kbd>, <kbd>^</kbd> + <kbd>x</kbd> on macOS, then press <kbd>Y</kbd> follow by <kbd>enter</kbd>).
 	1. Install the slurm controller using `sudo apt install slurm-wlm -y`
