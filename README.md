@@ -285,7 +285,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 		```
 		PartitionName=YOUR_CLUSTER_NAME Nodes=node[002-004] Default=YES MaxTime=INFINITE State=UP
 		```
-		
+
 		- For the `Nodes=` portion, make sure it matches the name you chose for your working nodes. For this guide, it was chosen to be `node` followed by a number (`[002-004]` represents node002, node003, and node004, repectively).
 		- For `PartitionName=` you can choose the name of your cluster.
 		
@@ -351,5 +351,7 @@ This section will walk you through setting up all of your worker nodes. Make sur
 ~node IP~	~node hostname~
 ~node IP~	~node hostname~
  -->
+
+## Testing the Cluster
 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
