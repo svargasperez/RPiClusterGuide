@@ -98,7 +98,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 		- On macOS: Select **System Preferences &rarr; Sharing**, and make sure "Internet Sharing" is checked and the WiFi connection is being shared with the ethernet LAN connection.
 		- On Windows: <a href="https://www.tomshardware.com/how-to/share-internet-connection-windows-ethernet-wi-fi" target="_blank">&#10697; link Windows 10</a>. 
 	1. Open the **Terminal** and run the command `ping raspberrypi.local`. Alternatively, you can type the command `arp -a` and copy the IP address associated with `raspberrypi.local`
-	1. Copy the IP address that is associated to the RPi. Press <kbd>Ctrl</kbd> + <kbd>z</kbd>  (<kbd>^</kbd> + <kbd>z</kbd> on macOS).<br><img src="img/fig6.png" alt="fig 6">
+	1. Copy the IP address that is associated to the RPi. Press <kbd>ctrl</kbd> + <kbd>z</kbd>  (<kbd>^</kbd> + <kbd>z</kbd> on macOS).<br><img src="img/fig6.png" alt="fig 6">
 	1. Then type the command `ssh pi@192.168.2.8`, where `192.168.2.8` is the IP address you copied in the previous step.
 	1. Type `Yes` and press <kbd>enter</kbd> (<kbd>return</kbd> in macOS).
 	1. Enter the RPi **username** and **password**. By default the username is `pi` and the password is `raspberry`. 
@@ -110,8 +110,8 @@ Next are instructions to logging into the RPis and edit some configuration files
 1. **Configuring Hostnames**: Choose a host name for your RPis carefully. Later, a scheduler called Slurm will be used to manage workload and running code in the cluster. Slurm requires nodes to be named a certain way, such as `node001` for the head node, and `node002`, `node003`, and `node004` for the worker node. 
 	1. Open a **Terminal** in the RPi and type the following commands to change the host name:
 		- `sudo hostname headnode001`, where `headnode001` is the host name you chose for the RPi.
-		- `sudo nano /etc/hostname`, this will open the file `/etc/hostname` using the text editor **nano**. Delete everything, and enter the same host name, i.e., `headnode001` or the host name chosen for the RPi. To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS). <br><img src="img/fig8.png" alt="fig 8">
-		- `sudo nano /etc/hosts`,  and replace `raspberrypi` with your chosen host name (e.g., `headnode001` ). To save press <kbd>Ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS).<br><img src="img/fig8b.png" alt="fig 8b">
+		- `sudo nano /etc/hostname`, this will open the file `/etc/hostname` using the text editor **nano**. Delete everything, and enter the same host name, i.e., `headnode001` or the host name chosen for the RPi. To save press <kbd>ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS). <br><img src="img/fig8.png" alt="fig 8">
+		- `sudo nano /etc/hosts`,  and replace `raspberrypi` with your chosen host name (e.g., `headnode001` ). To save press <kbd>ctrl</kbd> + <kbd>x</kbd> (<kbd>^</kbd> + <kbd>x</kbd> on macOS), then press <kbd>Y</kbd> follow by <kbd>enter</kbd> (<kbd>return</kbd> in macOS).<br><img src="img/fig8b.png" alt="fig 8b">
 	1. Repeat for the rest of RPis, using an appropiate hostnames for each of them (`headnode001`, `workernode002`, `workernode003`, and `workernode004`, or simply `node001`, `node002`, `node003`, and `node004`).
 
 1. **RPi's OS Configuration**:
@@ -230,7 +230,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	```
 	WORKER_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
 	``` 
-	<br><img src="img/fig20.png" alt="fig 20">
+	<img src="img/fig20.png" alt="fig 20"/>
 	1. `sudo mount -a` to finalize changes.
 	1. Now you should be able to create a file in your shared storage directory and it should be visible on all the nodes. You can test it by doing:
 		1. On head node: `cd /sharedfiles/`, then type `sudo touch test_file`. 
@@ -238,5 +238,31 @@ Next are instructions to logging into the RPis and edit some configuration files
 		1. *If after a reboot a worker node is not seeing the shared folder, try `sudo mount -a` to remount it*
 
 ## Optional Configurations
+
+1. **COnfiguring SLURM**: Slurm is a job scheduler. It is the software that determines which node should execute the next process, giving a more managed parallel computing experience. The head node sends processes to be executed to all the other nodes (for this particular configuration, the head node does not execute any parallel code itself).
+	1. To install in the head node only, ssh into the head node: `ssh pi@10.0.0.10`, where `10.0.0.10` is the IP address of your head node.
+	1. Edit the `hosts` file `sudo nano /etc/hosts`. We are going to add the hostnames and IPs of the other nodes in this file (at the bottom) of the file in this format:
+	```
+	WORKER_NODE_IP	WORKER_HOSTNAME
+	WORKER_NODE_IP	WORKER_HOSTNAME
+	WORKER_NODE_IP	WORKER_HOSTNAME
+	```
+	<img src="img/fig21.png" alt="fig 21"/>
+
+	1. Save and exit nano (<kbd>ctrl</kbd> + <kbd>x</kbd>, <kbd>^</kbd> + <kbd>x</kbd> on macOS, then press <kbd>Y</kbd> follow by <kbd>enter</kbd>).
+	1. Install the slurm controller using `sudo apt install slurm-wlm -y`
+	1. Slurm comes with default settings but we will need to edit them. Move into the slurm folder `cd /etc/slurm-llnl`. 
+	1. First, we will set the right permission to the file we will use as our base configuration: `sudo chmod -R 777 /usr/share/doc/slurm-client/examples/slurm.conf.simple.gz .`
+	1. Second, we will copy/paste the file into our slurm folder: `cp /usr/share/doc/slurm-client/examples/slurm.conf.simple.gz .`
+	1. Unzip the file: `gzip -d slurm.conf.simple.gz`
+	1. Replace the default configuration file by the one just unzipped: `mv slurm.conf.simple slurm.conf`
+
+1. More Slurm configuration (Head Node Only):
+	1. Open the Slurm configuration file: `sudo nano /etc/slurm-llnl/slurm.conf`.
+	1. First, comment out the first `SlurmctldHost= ` line and add a new one containing the head node's hostname and IP:
+	```
+	SlurmctldHost=node001(10.0.0.10)
+	```
+	<img src="img/fig22.png" alt="fig 22"/>
 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
