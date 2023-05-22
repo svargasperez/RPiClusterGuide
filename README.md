@@ -238,7 +238,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 		1. Access any of the worker node and type `cd /sharedfiles/`, then type `ls -l` and a list of files should be return including `test_file` (if you recently formated the hard drive, then this will be the only file).
 		1. *If after a reboot a worker node is not seeing the shared folder, try `sudo mount -a` to remount it*
 
-## Optional Configurations
+## Configuring A Job Scheduler
 
 1. **COnfiguring SLURM**: Slurm is a job scheduler. It is the software that determines which node should execute the next process, giving a more managed parallel computing experience. The head node sends processes to be executed to all the other nodes (for this particular configuration, the head node does not execute any parallel code itself).
 	1. To install in the head node only, ssh into the head node: `ssh pi@10.0.0.10`, where `10.0.0.10` is the IP address of your head node.
@@ -363,9 +363,22 @@ Next are instructions to logging into the RPis and edit some configuration files
 		```
 
 	1. Test that munge is working on this node by trying to connect to the headnode (or one of the worker nodes): `ssh pi@~your head node’s ip~ munge -n | unmunge`. Check and make sure it was successful:
-	<br><img src="img/fig29.png" alt="fig 29">
+	<br><img src="img/fig30.png" alt="fig 30">
 		- If munge is not working properly try rebooting all the pis and trying again.
+	1. Start Slurm: 
+		```
+		sudo systemctl enable slurmd
+		sudo systemctl start slurmd
+		```
 
-## Testing the Cluster
+	1. Reboot all the nodes (once you have configure all of them) to activate the changes: `sudo reboot`.
+
+# Testing the Cluster
+
+Let's test the cluster to check all our configurations are working. 
+
+1. Starting with Slurm: the head node will now control all the other nodes. On the head node run `sinfo` to get  slurm information. <br><img src="img/fig31.png" alt="fig 31">
+1. To test if slurm is working correctly we can issue the following command to tell slurm to run `hostname` on two nodes: `srun --nodes=2 hostname`. You should see the results of this command (`hostname`) printed for two of your nodes. You should see the host names of the  two nodes selected by slurm.
+
 
 > THIS SECTION IS UNDER CONSTRUCTION :construction_worker:
