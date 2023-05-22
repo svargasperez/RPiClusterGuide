@@ -138,11 +138,9 @@ Next are instructions to logging into the RPis and edit some configuration files
 	```
 	sudo apt install gfortran -y
 	sudo apt install ntpdate -y
-	sudo mkdir /opt/mpi-dl
-	sudo mkdir /opt/mpi
-	sudo mkdir /opt/mpi-build
+	sudo apt install mpich -y
 	```
-1. Move to the `mpi-dl` directory with the command `cd /opt/mpi-dl`
+<!-- 1. Move to the `mpi-dl` directory with the command `cd /opt/mpi-dl`
 1. Download `mpich`. The next few steps might take a while:<br>
 `sudo wget http://www.mpich.org/static/downloads/3.3/mpich-3.3.tar.gz`
 1. Extract the downloaded file: `sudo tar zxvf mpich-3.3.tar.gz`
@@ -150,12 +148,9 @@ Next are instructions to logging into the RPis and edit some configuration files
 1. Prepare the configuration file: `sudo /opt/mpi-dl/mpich-3.3/configure --prefix=/opt/mpi`
 1. Run the configuration build using: `sudo make`
 1. Finish with the actual installation: `sudo make install`
- 
-1. Install **MPI4PY**, which will make **Python** available to communicate with the cluster.
-1. Move back to the `opt` directory with the command `cd /opt/`
-1. Download the needed dependencies using: 
-`sudo apt install python-pip python-dev libopenmpi-dev -y`
-1. Start installing **MPI4PY** with: `sudo pip install mpi4py` 
+  -->
+1. Install **MPI4PY**, which will make **Python** available to communicate with the cluster. First install the needed dependencies: `sudo apt install python-pip python-dev libopenmpi-dev -y`
+	1. Now, install **MPI4PY** with: `sudo pip install mpi4py` 
  
 ## Cluster Configurations
 
