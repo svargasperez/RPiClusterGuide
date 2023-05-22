@@ -258,7 +258,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. Unzip the file: `gzip -d slurm.conf.simple.gz`
 	1. Replace the default configuration file by the one just unzipped: `mv slurm.conf.simple slurm.conf`
 
-1. More Slurm configuration (Head Node Only):
+1. More Slurm configuration (**Head Node Only**):
 	1. Open the Slurm configuration file: `sudo nano /etc/slurm-llnl/slurm.conf`.
 	1. First, comment out the first `SlurmctldHost= ` line and add a new one containing the head node's hostname and IP:
 		```
@@ -324,33 +324,47 @@ Next are instructions to logging into the RPis and edit some configuration files
 		<img src="img/fig28.png" alt="fig 28">
 
 	13. Save and exit.
-<!-- 
-7.3: Sharing Configuration (Head Node Only)
-For Slurm to control other nodes they need to have the same configuration and munge key. A munge key is a type of authentication service. You can easily share your configuration and munge key using the shared storage. 
-1.)	First, move back into the slurm-llnl folder. “cd /etc/slurm-llnl/”
-2.)	Then, copy and paste the two files we just created into our shared storage directory. 
-“sudo cp slurm.conf cgroup.conf cgroup_allowed_devices_file.conf /~your shared storage name~”
-3.)	Now copy and paste the munge key in the shared storage system.
- 	“sudo cp /etc/munge/munge.key /~your shared storage name~”
-4.)	Finally, we need to enable and start Munge. 
-	“sudo systemctl enable munge
-sudo systemctl start munge”
-5.)	And the Slurm daemon
-“sudo systemctl enable slurmd
-sudo systemctl start slurmd”
-6.)	And the Slurm controller
-“sudo systemctl enable slurmctld
-sudo systemctl start slurmctld”	
 
-7.4: Non-Head Nodes Slurm Set-Up (All WorkerNodes)
-This section will walk you through setting up all of your worker nodes. Make sure your head node is still running to allow access to the shared storage.  Once again you can do each node individually or all nodes at the same time.
-1.)	Install the Slurm client. “sudo apt install slurmd slurm-client -y”
-2.)	Just like before update the hosts file. “sudo nano /etc/hosts”
-3.)	Add all of the other nodes and their IPs excluding that.
-~node IP~	~node hostname~
-~node IP~	~node hostname~
-~node IP~	~node hostname~
- -->
+1. Sharing Configuration (**Head Node Only**): For Slurm to control other nodes, they need to have the same configuration and **munge key**. A **munge key** is a type of authentication service. You can easily share your configuration and munge key using the shared storage. 
+	1. First, navigate to the `slurm-llnl` folder: `cd /etc/slurm-llnl/`
+	1. Then, copy and paste the two files created previously into the shared storage directory: `sudo cp slurm.conf cgroup.conf cgroup_allowed_devices_file.conf /sharedfiles`, where `/sharedfiles` is the shared folder.
+	1. Copy and paste the munge key in the shared storage system: `sudo cp /etc/munge/munge.key /sharedfiles`
+	1. Finally, we need to enable and start Munge. In the terminal type the following commands (one by one): 
+		```
+		sudo systemctl enable munge
+		sudo systemctl start munge
+		```
+	1. Also, enable and start the Slurm daemon and controller:
+		```
+		sudo systemctl enable slurmd
+		sudo systemctl start slurmd
+		sudo systemctl enable slurmctld
+		sudo systemctl start slurmctld
+
+		```
+1. Slurm Set-Up for  Worker Nodes (**All Worker Nodes**): This section will walk you through setting up all of your worker nodes. Make sure your head node is still running to allow access to the shared storage. Once again, you will perform the following steps in each node individually (you can ssh into each node via the head node, or from an external computer).
+	1. Install the Slurm client in the worker node: `sudo apt install slurmd slurm-client -y`
+	1. Like before, update the hosts file: `sudo nano /etc/hosts`, and add all of the other nodes and their IPs (excluding this node itself):
+		```
+		HEAD_NODE_IP	HEAD_NODE_HOSTNAME
+		WORKER_NODE_IP	WORKER_HOSTNAME
+		WORKER_NODE_IP	WORKER_HOSTNAME
+		```
+		<img src="img/fig29.png" alt="fig 29">
+
+	3.	Save and exit.
+	1. Now, copy and paste the munge key from the shared storage to the munge key folder:  `sudo cp /sharedfiles/munge.key /etc/munge/munge.key`
+	1. Copy and paste the Slurm configuration files: `sudo cp /sharedfiles/slurm.conf /etc/slurm-llnl/slurm.conf`
+	1. And copy/paste the cgroups configuration: `sudo cp /~your shared storage~/cgroup* /etc/slurm-llnl`
+    1. Enable and start munge:
+		```
+		sudo systemctl enable munge
+		sudo systemctl start munge
+		```
+
+	1. Test that munge is working on this node by trying to connect to the headnode (or one of the worker nodes): `ssh pi@~your head node’s ip~ munge -n | unmunge`. Check and make sure it was successful:
+	<br><img src="img/fig29.png" alt="fig 29">
+		- If munge is not working properly try rebooting all the pis and trying again.
 
 ## Testing the Cluster
 
