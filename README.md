@@ -149,7 +149,7 @@ Next are instructions to logging into the RPis and edit some configuration files
 1. Run the configuration build using: `sudo make`
 1. Finish with the actual installation: `sudo make install`
   -->
-1. Install **MPI4PY**, which will make **Python** available to communicate with the cluster. First install the needed dependencies: `sudo apt install python-pip python-dev libopenmpi-dev -y`
+3. Install **MPI4PY**, which will make **Python** available to communicate with the cluster. First install the needed dependencies: `sudo apt install python-pip python-dev libopenmpi-dev -y`
 	1. Now, install **MPI4PY** with: `sudo pip install mpi4py` 
  
 ## Cluster Configurations
