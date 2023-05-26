@@ -221,9 +221,9 @@ Next are instructions to logging into the RPis and edit some configuration files
 	1. First, install NFS server: `sudo apt install nfs-common -y`
 	1. Same as with the head node we want to create a folder that can be edited by anyone: `sudo mkdir /sharedfiles`. *Make sure to use the same folder name as before*.
 	1. `sudo chown nobody.nogroup -R /sharedfiles` and then `sudo chmod 777 -R /sharedfiles` to fix permissions, ownership, and access.
-	1. Then, edit the `fstab` file: `sudo nano /etc/fstab` by adding the following line (taking into account the IP address of each worker node):
+	1. Then, edit the `fstab` file: `sudo nano /etc/fstab` by adding the following line (the IP address should be the one of the head node):
 		```
-		WORKER_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
+		HEAD_NODE_IP:/sharedfiles    /sharedfiles    nfs    defaults   0 0
 		``` 
 		<img src="img/fig20.png" alt="fig 20"/>
 
